@@ -8,21 +8,30 @@
 
   &__brand a {
     font-weight: 700;
-    color: #2244ff;
+    font-size: 1.2rem;
     text-decoration: none;
+    color: #2244ff;
   }
 
   &__menu {
     list-style: none;
     display: flex;
-    gap: 1rem;
+    gap: 1.2rem;
 
     a {
-      color: #333;
       text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
 
-      &:hover {
-        text-decoration: underline;
+      .badge {
+        padding: 0.2rem 0.5rem;
+        background: #415aff;
+        color: white;
+        border-radius: 10px;
+        font-size: .8rem;
       }
     }
   }

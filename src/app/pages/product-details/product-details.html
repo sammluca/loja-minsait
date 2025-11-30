@@ -2,12 +2,25 @@
 
 <div *ngIf="!loading() && product()" class="container">
 
-  <h2>{{ product()!.name }}</h2>
+  <h2>{{ product()!.nome }}</h2>
 
-  <p>{{ product()!.description }}</p>
+  <p><strong>Código de Barras:</strong> {{ product()!.codigoBarras || '---' }}</p>
 
-  <p><strong>Preço:</strong> R$ {{ product()!.price | number:'1.2-2' }}</p>
+  <p><strong>Preço:</strong> R$ {{ product()!.preco | number:'1.2-2' }}</p>
 
-  <button (click)="addToCart()">Adicionar ao carrinho</button>
+  <p><strong>Estoque:</strong> {{ product()!.quantidadeEstoque }}</p>
 
+  <p><strong>Categoria ID:</strong> {{ product()!.categoria?.id || 'Sem categoria' }}</p>
+
+  <div class="buttons">
+
+    <button class="edit" [routerLink]="['/products','edit', product()!.id]">
+      Editar
+    </button>
+
+    <button class="add" (click)="addToCart()">
+      Adicionar ao carrinho
+    </button>
+
+  </div>
 </div>

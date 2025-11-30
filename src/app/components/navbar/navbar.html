@@ -5,6 +5,11 @@
 
   <ul class="navbar__menu">
     <li><a routerLink="/products">Produtos</a></li>
-    <li><a routerLink="/cart">Carrinho</a></li>
+
+    <li>
+      <a routerLink="/cart">
+        Carrinho <span class="badge">{{ cartCount() }}</span>
+      </a>
+    </li>
   </ul>
 </nav>

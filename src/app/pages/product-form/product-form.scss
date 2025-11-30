@@ -1,0 +1,49 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: #f6f7ff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid #dce1ff;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+
+  input {
+    padding: .6rem;
+    border-radius: 6px;
+    border: 1px solid #b9c2ff;
+  }
+
+  small {
+    color: #d33;
+    font-size: .8rem;
+  }
+}
+
+.save {
+  padding: .7rem 1.2rem;
+  background: #4a63ff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+
+  &:hover {
+    opacity: .9;
+  }
+
+  &:disabled {
+    background: #999;
+    cursor: not-allowed;
+  }
+}

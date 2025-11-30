@@ -1,7 +1,10 @@
 export interface Product {
   id: number;
-  name: string;
-  price: number;
-  description?: string;
-  barcode?: string;
+  codigoBarras?: string | null;
+  nome: string;
+  preco: number;
+  quantidadeEstoque: number;
+  categoria?: {
+    id: number | null;
+  } | null;
 }

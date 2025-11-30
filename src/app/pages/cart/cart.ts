@@ -15,7 +15,8 @@ export class CartPage {
   items = computed(() => this.cartService.items());
   total = computed(() =>
     this.items().reduce((sum: number, item: CartItem) =>
-      sum + item.product.price * item.quantity,
+      sum + item.product.preco * item.quantity
+,
     0)
   );
 
