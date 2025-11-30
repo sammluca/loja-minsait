@@ -33,7 +33,11 @@ export class ProductFormPage implements OnInit {
       id: this.fb.control<number | null>(null),
       codigoBarras: this.fb.control<string | null>(null),
       nome: this.fb.control<string>('', Validators.required),
-      preco: this.fb.control<number>(0, Validators.required),
+      preco: this.fb.control<number>(0, [
+      Validators.required,
+      Validators.min(0)
+      ]),
+
       quantidadeEstoque: this.fb.control<number>(0, Validators.required),
       categoria: this.fb.group({
         id: this.fb.control<number | null>(null)

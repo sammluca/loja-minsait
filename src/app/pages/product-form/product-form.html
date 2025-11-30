@@ -13,11 +13,23 @@
     <small *ngIf="form.get('nome')?.touched && form.get('nome')?.invalid">Campo obrigatório</small>
   </div>
 
-  <div class="field">
-    <label>Preço *</label>
-    <input type="number" step="0.01" formControlName="preco">
-    <small *ngIf="form.get('preco')?.touched && form.get('preco')?.invalid">Campo obrigatório</small>
-  </div>
+<div class="field">
+  <label>Preço *</label>
+  <input
+    type="number"
+    step="0.01"
+    formControlName="preco"
+    min="0"
+  >
+
+  <small *ngIf="form.get('preco')?.touched && form.get('preco')?.errors?.['min']">
+    O preço não pode ser negativo.
+  </small>
+
+  <small *ngIf="form.get('preco')?.touched && form.get('preco')?.errors?.['required']">
+    Campo obrigatório.
+  </small>
+</div>
 
   <div class="field">
     <label>Quantidade em Estoque *</label>
