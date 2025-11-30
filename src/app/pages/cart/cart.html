@@ -1,38 +1,59 @@
-<h2>Carrinho</h2>
+<h2>Carrinho de Compras</h2>
 
-<div *ngIf="items().length === 0">
-  Seu carrinho está vazio.
-</div>
+<div class="cart-container" *ngIf="items().length > 0; else vazio">
 
-<div class="item" *ngFor="let item of items()">
-  <div class="info">
-    <h3>{{ item.product.nome }}</h3>
-    <p>Código: {{ item.product.codigoBarras || '---' }}</p>
-    <p>Estoque disponível: {{ item.product.quantidadeEstoque }}</p>
+  <div class="cart-item" *ngFor="let item of items()">
+
+    <div class="item-info">
+      <h3>{{ item.product.nome }}</h3>
+      <p class="codigo">Código: {{ item.product.codigoBarras || '---' }}</p>
+      <p class="estoque">
+        Estoque disponível: {{ item.product.quantidadeEstoque }}
+      </p>
+    </div>
+
+    <div class="item-actions">
+
+      <div class="qtd-control">
+        <label>Qtd:</label>
+        <input
+          type="number"
+          [value]="item.quantity"
+          min="1"
+          (input)="updateQty(item, $event)"
+        >
+      </div>
+
+      <button class="remove-btn" (click)="removeItem(item)">
+        Remover
+      </button>
+
+      <div class="subtotal">
+        <strong>R$ {{ (item.product.preco * item.quantity) | number:'1.2-2' }}</strong>
+      </div>
+    </div>
+
   </div>
 
-  <div class="actions">
-    <input
-      type="number"
-      [value]="item.quantity"
-      (input)="updateQty(item, $event)"
-      min="1"
-    >
-
-    <button (click)="removeItem(item)">Remover</button>
-  </div>
-
-  <strong>
-    Subtotal:
-    R$
-    {{ (item.product.preco * item.quantity) | number:'1.2-2' }}
-  </strong>
-</div>
-
-<div class="total" *ngIf="items().length > 0">
-  Total: R$ {{ total() | number:'1.2-2' }}
-</div>
-
-<button class="clear" *ngIf="items().length > 0" (click)="clear()">
-  Limpar Carrinho
+  <div class="cart-footer">
+    <div class="total-box">
+      <strong>Total:</strong>
+      <span>R$ {{ total() | number:'1.2-2' }}</span>
+      <button class="finish-btn" (click)="finishOrder()">
+  Finalizar Pedido
 </button>
+
+
+      
+    </div>
+
+    <button class="clear-btn" (click)="clear()">
+      Limpar Carrinho
+    </button>
+  </div>
+
+</div>
+
+<ng-template #vazio>
+  <p class="empty">Seu carrinho está vazio.</p>
+</ng-template>

@@ -9,7 +9,7 @@ import { CartItem, CartService } from '../../services/cart';
   templateUrl: './cart.html',
   styleUrls: ['./cart.scss']
 })
-export class CartPage {
+export class Cart {
 
   items = computed(() => this.cartService.items());
 
@@ -30,21 +30,44 @@ export class CartPage {
   }
 
   removeItem(item: CartItem) {
-  if (!confirm(`Deseja realmente remover '${item.product.nome}' do carrinho?`)) {
+    if (!confirm(`Deseja realmente remover '${item.product.nome}' do carrinho?`)) {
+      return;
+    }
+
+    if (item.product.id != null) {
+      this.cartService.removeFromCart(item.product.id);
+    }
+  }
+
+  clear() {
+    if (!confirm("Tem certeza que deseja esvaziar o carrinho?")) {
+      return;
+    }
+
+    this.cartService.clear();
+  }
+
+ 
+ finishOrder() {
+  if (this.items().length === 0) {
+    alert("Carrinho vazio!");
     return;
   }
 
-  if (item.product.id != null) {
-    this.cartService.removeFromCart(item.product.id);
-  }
-}
-
-
-clear() {
-  if (!confirm("Tem certeza que deseja esvaziar o carrinho?")) {
-    return;
-  }
-
+  // limpa sem confirm()
   this.cartService.clear();
+
+  const box = document.createElement('div');
+  box.className = 'success-popup';
+  box.innerText = "Pedido criado com sucesso!";
+
+  document.body.appendChild(box);
+
+  setTimeout(() => box.classList.add('show'), 10);
+
+  setTimeout(() => {
+    box.classList.remove('show');
+    setTimeout(() => box.remove(), 300);
+  }, 2500);
 }
 }

@@ -1,0 +1,30 @@
+.home-container {
+  text-align: center;
+  margin-top: 5rem;
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+
+  p {
+    opacity: .7;
+    margin-top: .5rem;
+    font-size: 1.2rem;
+  }
+
+  .btn-start {
+    background: #4a63ff;
+    margin-top: 2rem;
+    padding: .9rem 1.4rem;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+
+    &:hover {
+      opacity: .85;
+    }
+  }
+}
