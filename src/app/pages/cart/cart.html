@@ -1,1 +1,32 @@
-<p>cart works!</p>
+<h2>Carrinho</h2>
+
+<div *ngIf="items().length === 0">
+  Carrinho vazio.
+</div>
+
+<div *ngFor="let item of items()" class="cart-item">
+  <div class="info">
+    <h3>{{ item.product.name }}</h3>
+    <p>Preço: R$ {{ item.product.price | number:'1.2-2' }}</p>
+  </div>
+
+  <div class="actions">
+    <label>Qtd:</label>
+    <input 
+      type="number"
+      [value]="item.quantity"
+      (change)="updateQty(item, $event)"
+      min="1"
+    />
+
+    <button class="remove" (click)="removeItem(item)">
+      Remover
+    </button>
+  </div>
+</div>
+
+<div class="total" *ngIf="items().length > 0">
+  <h3>Total: R$ {{ total() | number:'1.2-2' }}</h3>
+
+  <button class="clear" (click)="clear()">Esvaziar carrinho</button>
+</div>

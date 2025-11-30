@@ -1,1 +1,13 @@
-<p>product-details works!</p>
+<div *ngIf="loading()">Carregando...</div>
+
+<div *ngIf="!loading() && product()" class="container">
+
+  <h2>{{ product()!.name }}</h2>
+
+  <p>{{ product()!.description }}</p>
+
+  <p><strong>Preço:</strong> R$ {{ product()!.price | number:'1.2-2' }}</p>
+
+  <button (click)="addToCart()">Adicionar ao carrinho</button>
+
+</div>

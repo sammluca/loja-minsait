@@ -1,0 +1,30 @@
+.grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+.card {
+  background: #f8f9ff;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #dce1ff;
+
+  h3 {
+    margin-top: 0;
+  }
+
+  button {
+    margin-top: .5rem;
+    padding: .5rem 1rem;
+    cursor: pointer;
+    border: none;
+    background: #415aff;
+    color: white;
+    border-radius: 6px;
+
+    &:hover {
+      opacity: .8;
+    }
+  }
+}

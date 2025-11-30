@@ -1,11 +1,41 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Product } from '../../models/product.model';
+import { ProductService } from '../../services/product';
+import { CartService } from '../../services/cart';
+
 
 @Component({
   selector: 'app-products',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './products.html',
-  styleUrl: './products.scss',
+  styleUrls: ['./products.scss']
 })
-export class Products {
+export class ProductsPage implements OnInit {
 
+  loading = signal(true);
+  products = signal<Product[]>([]);
+
+  constructor(
+    private productService: ProductService,
+    private cartService: CartService
+  ) {}
+
+  ngOnInit(): void {
+    this.productService.list().subscribe({
+      next: (data) => {
+        this.products.set(data);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+      }
+    });
+  }
+
+  addToCart(product: Product) {
+    this.cartService.addToCart(product);
+    alert("Produto adicionado ao carrinho!");
+  }
 }

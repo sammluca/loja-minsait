@@ -1,1 +1,13 @@
-<p>products works!</p>
+<h2>Produtos</h2>
+
+<div *ngIf="loading()">Carregando...</div>
+
+<div class="grid" *ngIf="!loading()">
+  <div class="card" *ngFor="let p of products()">
+    <h3>{{ p.name }}</h3>
+    <p>{{ p.description }}</p>
+    <strong>R$ {{ p.price | number:'1.2-2' }}</strong>
+
+    <button (click)="addToCart(p)">Adicionar ao carrinho</button>
+  </div>
+</div>
