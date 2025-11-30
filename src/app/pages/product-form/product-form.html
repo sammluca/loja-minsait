@@ -31,11 +31,19 @@
   </small>
 </div>
 
-  <div class="field">
-    <label>Quantidade em Estoque *</label>
-    <input type="number" formControlName="quantidadeEstoque">
-    <small *ngIf="form.get('quantidadeEstoque')?.touched && form.get('quantidadeEstoque')?.invalid">Campo obrigatório</small>
-  </div>
+<div class="field">
+  <label>Quantidade em Estoque *</label>
+  <input type="number" formControlName="quantidadeEstoque" min="0">
+
+  <small *ngIf="form.get('quantidadeEstoque')?.touched && form.get('quantidadeEstoque')?.errors?.['min']">
+    O estoque não pode ser negativo.
+  </small>
+
+  <small *ngIf="form.get('quantidadeEstoque')?.touched && form.get('quantidadeEstoque')?.errors?.['required']">
+    Campo obrigatório.
+  </small>
+</div>
+
 
   <div class="field">
     <label>ID da Categoria (opcional)</label>

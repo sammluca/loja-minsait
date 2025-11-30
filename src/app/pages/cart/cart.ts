@@ -30,12 +30,21 @@ export class CartPage {
   }
 
   removeItem(item: CartItem) {
-    if (item.product.id != null) {
-      this.cartService.removeFromCart(item.product.id);
-    }
+  if (!confirm(`Deseja realmente remover '${item.product.nome}' do carrinho?`)) {
+    return;
   }
 
-  clear() {
-    this.cartService.clear();
+  if (item.product.id != null) {
+    this.cartService.removeFromCart(item.product.id);
   }
+}
+
+
+clear() {
+  if (!confirm("Tem certeza que deseja esvaziar o carrinho?")) {
+    return;
+  }
+
+  this.cartService.clear();
+}
 }

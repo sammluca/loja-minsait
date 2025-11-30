@@ -38,7 +38,10 @@ export class ProductFormPage implements OnInit {
       Validators.min(0)
       ]),
 
-      quantidadeEstoque: this.fb.control<number>(0, Validators.required),
+      quantidadeEstoque: this.fb.control<number>(0, [
+       Validators.required,
+       Validators.min(0)
+       ]),
       categoria: this.fb.group({
         id: this.fb.control<number | null>(null)
       })

@@ -15,12 +15,14 @@ export class CartService {
   private stockKey = 'product_stock_overrides';
 
   private itemsSignal = signal<CartItem[]>(this.loadFromStorage());
-
   items = computed(() => this.itemsSignal());
 
   constructor() {}
 
 
+  // ==================================================
+  //  🔥 ESTOQUE - Overrides persistentes
+  // ==================================================
   private loadStockOverrides(): Record<string, number> {
     const data = localStorage.getItem(this.stockKey);
     return data ? JSON.parse(data) : {};
@@ -37,9 +39,26 @@ export class CartService {
     this.saveStockOverrides(stock);
   }
 
+  // 🔥 Deve ser chamado quando o produto for carregado no ProductService
+  applyStockFromLocalStorage(product: Product): Product {
+    if (product.id == null) return product;
+
+    const stockOverrides = this.loadStockOverrides();
+    if (stockOverrides[product.id] != null) {
+      product.quantidadeEstoque = stockOverrides[product.id];
+    }
+
+    return product;
+  }
+
+
+  // ==================================================
+  //  🛒 LÓGICA DO CARRINHO
+  // ==================================================
   addToCart(product: Product): void {
     if (product.id == null) return;
 
+    // Proteção de estoque
     if (product.quantidadeEstoque <= 0) {
       alert("Produto sem estoque disponível!");
       return;
@@ -73,23 +92,21 @@ export class CartService {
     const item = current.find(i => i.product.id === productId);
 
     if (item) {
-     
       item.product.quantidadeEstoque += item.quantity;
       this.updateLocalStock(item.product);
     }
 
     const updated = current.filter(i => i.product.id !== productId);
-
     this.itemsSignal.set(updated);
     this.saveToStorage();
   }
+
 
   updateQuantity(productId: number | null, quantity: number): void {
     if (productId == null) return;
 
     const current = this.itemsSignal();
     const item = current.find(i => i.product.id === productId);
-
     if (!item) return;
 
     if (quantity < 1) return;
@@ -101,12 +118,10 @@ export class CartService {
       return;
     }
 
-
     const newStock = maxAllowed - quantity;
     item.product.quantidadeEstoque = newStock;
 
     item.quantity = quantity;
-
     this.updateLocalStock(item.product);
 
     this.itemsSignal.set([...current]);
@@ -125,6 +140,7 @@ export class CartService {
   }
 
 
+  // Persistência do carrinho
   private saveToStorage() {
     localStorage.setItem(this.storageKey, JSON.stringify(this.itemsSignal()));
   }
