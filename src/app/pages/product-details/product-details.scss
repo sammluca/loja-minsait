@@ -31,9 +31,14 @@
       cursor: pointer;
       font-weight: 500;
       color: #fff;
+      transition: background-color .2s ease, transform .1s ease;
 
       &:hover {
-        opacity: .85;
+        opacity: .9;
+      }
+
+      &:active {
+        transform: scale(.97);
       }
     }
 
@@ -43,6 +48,18 @@
 
     .add {
       background: #4caf50;
+    }
+
+    .delete-btn {
+      background: #e53935;         
+      
+      &:hover {
+        background: #c62828;        
+      }
+
+      &:active {
+        background: #b71c1c;
+      }
     }
   }
 }

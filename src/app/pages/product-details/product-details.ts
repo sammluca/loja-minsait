@@ -45,4 +45,24 @@ export class ProductDetailsPage implements OnInit {
       alert("Produto adicionado ao carrinho!");
     }
   }
+
+  deleteProduct() {
+  const prod = this.product();
+  if (!prod || !prod.id) return;
+
+  if (!confirm("Tem certeza que deseja excluir este produto?")) {
+    return;
+  }
+
+  this.productService.delete(prod.id).subscribe({
+    next: () => {
+      alert("Produto excluído com sucesso!");
+      window.location.href = '/products'; 
+    },
+    error: () => {
+      alert("Erro ao excluir produto");
+    }
+  });
+}
+
 }
