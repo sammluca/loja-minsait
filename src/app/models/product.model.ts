@@ -1,10 +1,10 @@
 export interface Product {
-  id: number;
-  codigoBarras?: string | null;
+  id: number | null;                                  
+  codigoBarras: string | null;
   nome: string;
   preco: number;
   quantidadeEstoque: number;
-  categoria?: {
+  categoria: {
     id: number | null;
   } | null;
 }

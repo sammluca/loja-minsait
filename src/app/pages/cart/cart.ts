@@ -11,12 +11,11 @@ import { CartItem, CartService } from '../../services/cart';
 })
 export class CartPage {
 
-  
   items = computed(() => this.cartService.items());
+
   total = computed(() =>
     this.items().reduce((sum: number, item: CartItem) =>
-      sum + item.product.preco * item.quantity
-,
+      sum + item.product.preco * item.quantity,
     0)
   );
 
@@ -24,11 +23,16 @@ export class CartPage {
 
   updateQty(item: CartItem, event: Event) {
     const qtd = Number((event.target as HTMLInputElement).value);
-    this.cartService.updateQuantity(item.product.id, qtd);
+
+    if (item.product.id != null) {
+      this.cartService.updateQuantity(item.product.id, qtd);
+    }
   }
 
   removeItem(item: CartItem) {
-    this.cartService.removeFromCart(item.product.id);
+    if (item.product.id != null) {
+      this.cartService.removeFromCart(item.product.id);
+    }
   }
 
   clear() {

@@ -1,7 +1,6 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { Product } from '../models/product.model';
 
-
 export interface CartItem {
   product: Product;
   quantity: number;
@@ -18,15 +17,20 @@ export class CartService {
 
   items = computed(() => this.itemsSignal());
 
- 
   cartCount = computed(() =>
     this.itemsSignal().reduce((acc, item) => acc + item.quantity, 0)
   );
 
   constructor() {}
 
-
   addToCart(product: Product): void {
+
+    
+    if (product.id == null) {
+      console.warn('Produto sem ID não pode ser adicionado ao carrinho.');
+      return;
+    }
+
     const current = this.itemsSignal();
     const exists = current.find(i => i.product.id === product.id);
 
@@ -40,13 +44,19 @@ export class CartService {
     this.saveToStorage();
   }
 
-  removeFromCart(productId: number): void {
+  removeFromCart(productId: number | null): void {
+
+    if (productId == null) return; 
+
     const updated = this.itemsSignal().filter(i => i.product.id !== productId);
     this.itemsSignal.set(updated);
     this.saveToStorage();
   }
 
-  updateQuantity(productId: number, quantity: number): void {
+  updateQuantity(productId: number | null, quantity: number): void {
+
+    if (productId == null) return; 
+
     const updated = this.itemsSignal().map(item =>
       item.product.id === productId ? { ...item, quantity } : item
     );
@@ -59,7 +69,6 @@ export class CartService {
     this.itemsSignal.set([]);
     this.saveToStorage();
   }
-
 
   private saveToStorage(): void {
     localStorage.setItem(this.storageKey, JSON.stringify(this.itemsSignal()));
