@@ -4,7 +4,6 @@ import { ReactiveFormsModule, NonNullableFormBuilder, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../../models/product.model';
 import { ProductService } from '../../services/product';
-
 @Component({
   selector: 'app-product-form',
   standalone: true,
