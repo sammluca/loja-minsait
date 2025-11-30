@@ -1,0 +1,26 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nome</th>
+      <th>Preço</th>
+      <th>Estoque</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let p of products">
+      <td>{{ p.id }}</td>
+      <td>{{ p.nome }}</td>
+      <td>R$ {{ p.preco | number:'1.2-2' }}</td>
+      <td>{{ p.quantidadeEstoque }}</td>
+
+      <td class="actions">
+        <button class="edit" (click)="onEdit(p.id)">Editar</button>
+        <button class="delete" (click)="onDelete(p.id)">Excluir</button>
+        <button class="add" (click)="onAddToCart(p)">Carrinho</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

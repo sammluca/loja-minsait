@@ -1,0 +1,52 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+
+  th, td {
+    padding: 12px;
+    border-bottom: 1px solid #e2e2e2;
+    text-align: left;
+  }
+
+  th {
+    background: #f2f3ff;
+    font-weight: 600;
+  }
+
+  tr:hover {
+    background: #fafaff;
+  }
+
+  .actions {
+    display: flex;
+    gap: 10px;
+
+    button {
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      color: #fff;
+
+      &:hover {
+        opacity: .85;
+      }
+    }
+
+    .edit {
+      background: #4a63ff;
+    }
+
+    .delete {
+      background: #ff4a4a;
+    }
+
+    .add {
+      background: #4caf50;
+    }
+  }
+}
