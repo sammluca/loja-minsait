@@ -1,64 +1,61 @@
-// src/app/services/stock.service.ts
 import { Injectable } from '@angular/core';
-import { StorageService } from './storage.service';
 import { Product } from '../models/product.model';
-
-const STOCK_KEY = 'product_stock_overrides';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StockService {
-  constructor(private storage: StorageService) {}
+  private stockKey = 'product_stock_overrides';
 
-  private loadOverrides(): Record<string, number> {
-    return this.storage.get<Record<string, number>>(STOCK_KEY) ?? {};
+  constructor() {}
+
+  private loadStock(): Record<string, number> {
+    const data = localStorage.getItem(this.stockKey);
+    return data ? JSON.parse(data) : {};
   }
 
-  private saveOverrides(map: Record<string, number>): void {
-    this.storage.set(STOCK_KEY, map);
+  private saveStock(data: Record<string, number>): void {
+    localStorage.setItem(this.stockKey, JSON.stringify(data));
   }
 
-  getOverride(productId: number | null): number | undefined {
-    if (productId == null) return undefined;
-    const map = this.loadOverrides();
-    return map[productId] !== undefined ? map[productId] : undefined;
+  getStock(productId: number | null): number | null {
+    if (productId == null) return null;
+    const stock = this.loadStock();
+    return stock[productId] ?? null;
   }
 
-  setOverride(productId: number | null, newValue: number): void {
+  applyToProduct(product: Product): Product {
+    if (product.id == null) return { ...product };
+    const overridden = this.getStock(product.id);
+    return {
+      ...product,
+      quantidadeEstoque: overridden !== null ? overridden : product.quantidadeEstoque
+    };
+  }
+
+  setStock(productId: number | null, newStock: number): void {
     if (productId == null) return;
-    const map = this.loadOverrides();
-    map[productId] = newValue;
-    this.saveOverrides(map);
+    const stock = this.loadStock();
+    stock[productId] = newStock;
+    this.saveStock(stock);
   }
 
-  applyLocalStock(product: Product): Product {
-    if (product.id == null) return product;
-    const override = this.getOverride(product.id);
-    if (override !== undefined) {
-      return { ...product, quantidadeEstoque: override };
-    }
-    return product;
+
+  increaseStock(product: Product | number | null, amount: number): void {
+    const id = typeof product === 'number' ? product : product?.id ?? null;
+    if (id == null) return;
+    const map = this.loadStock();
+    const curr = map[id] ?? (product && typeof product !== 'number' ? product.quantidadeEstoque : 0);
+    map[id] = curr + amount;
+    this.saveStock(map);
   }
 
-  saveStock(product: Product): void {
-    if (product.id == null) return;
-    this.setOverride(product.id, product.quantidadeEstoque);
-  }
-
-  increaseStock(productId: number | null, amount: number): void {
-    if (productId == null) return;
-    const map = this.loadOverrides();
-    const curr = map[productId] ?? 0;
-    map[productId] = curr + amount;
-    this.saveOverrides(map);
-  }
-
-  decreaseStock(productId: number | null, amount: number): void {
-    if (productId == null) return;
-    const map = this.loadOverrides();
-    const curr = map[productId] ?? 0;
-    map[productId] = Math.max(0, curr - amount);
-    this.saveOverrides(map);
+  decreaseStock(product: Product | number | null, amount: number): void {
+    const id = typeof product === 'number' ? product : product?.id ?? null;
+    if (id == null || amount <= 0) return;
+    const map = this.loadStock();
+    const curr = map[id] ?? (product && typeof product !== 'number' ? product.quantidadeEstoque : 0);
+    map[id] = Math.max(0, curr - amount);
+    this.saveStock(map);
   }
 }

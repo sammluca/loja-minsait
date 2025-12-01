@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../../models/product.model';
-import { ProductService } from '../../services/product';
+import { ProductService } from '../../services/product.service';
 @Component({
   selector: 'app-product-form',
   standalone: true,

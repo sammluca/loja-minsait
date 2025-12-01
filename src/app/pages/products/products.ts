@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 
 import { Product } from '../../models/product.model';
-import { ProductService } from '../../services/product';
-import { CartService } from '../../services/cart';
+import { ProductService } from '../../services/product.service';
+import { CartService } from '../../services/cart.service';
 
 import { ProductTableComponent } from '../../components/product-table/product-table';
 
