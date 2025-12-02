@@ -1,59 +1,77 @@
-# LojaMinsait
+# Loja Minsait — Sistema de Vendas Simplificado
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.10.
+Este projeto é um **sistema de vendas simplificado**, desenvolvido como parte de uma atividade.
+O sistema permite **cadastro de produtos**, controle automático de **estoque**, gerenciamento de **carrinho de compras** e finalização de pedidos, construído com **Angular 20**, Signals e armazenamento em **localStorage / API**.
 
-## Development server
+---
 
-To start a local development server, run:
+##  Tecnologias Utilizadas
+
+- **Angular 20**
+- **Angular Signals**
+- **TypeScript**
+- **SCSS**
+- **LocalStorage**
+- **API REST Java SpringBoot)**
+
+---
+
+##  Funcionalidades
+
+###  Produtos
+- ✔ Criar produto  
+- ✔ Editar produto  
+- ✔ Listar produtos  
+- ✔ Excluir produto  
+- ✔ Validações no formulário  
+- ✔ Persistência via API (ProductService)
+
+---
+
+###  Carrinho
+- ✔ Adicionar produto ao carrinho  
+- ✔ Incrementar quantidade de itens  
+- ✔ Remover itens  
+- ✔ Limpar todo o carrinho  
+- ✔ Cálculo automático do total  
+- ✔ Finalização de pedido com feedback visual
+
+---
+
+###  Estoque
+- ✔ Controle automático de estoque  
+- ✔ Subtrai estoque ao adicionar ao carrinho  
+- ✔ Reposição de estoque ao remover do carrinho  
+- ✔ Persistência em **localStorage**  
+- ✔ Estoque aplicado dinamicamente aos produtos exibidos
+
+---
+
+###  Outros Recursos
+- ✔ Uso de **Angular Signals** para estado reativo  
+- ✔ Componentes reutilizáveis (ex: Product Table)  
+- ✔ Código organizado por serviços, modelos e páginas  
+
+---
+
+##  Instalação e Execução
+
+###  **Rodar o projeto**
 
 ```bash
-ng serve
-```
+npm install
+npm start
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+A aplicação ficará disponível em: http://localhost:4200
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Testes
 
-```bash
-ng generate component component-name
-```
+### Para rodar testes unitários(Karma/Jasmine):
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+npm test
 
-```bash
-ng generate --help
-```
 
-## Building
 
-To build the project run:
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
