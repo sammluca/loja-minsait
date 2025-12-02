@@ -7,21 +7,19 @@ import { Product } from '../models/product.model';
 export class StockService {
   private stockKey = 'product_stock_overrides';
 
-  constructor() {}
-
-  private loadStock(): Record<string, number> {
-    const data = localStorage.getItem(this.stockKey);
-    return data ? JSON.parse(data) : {};
+  private loadStock(): Record<number, number> {
+    const raw = localStorage.getItem(this.stockKey);
+    return raw ? JSON.parse(raw) : {};
   }
 
-  private saveStock(data: Record<string, number>): void {
-    localStorage.setItem(this.stockKey, JSON.stringify(data));
+  private saveStock(stock: Record<number, number>): void {
+    localStorage.setItem(this.stockKey, JSON.stringify(stock));
   }
 
   getStock(productId: number | null): number | null {
     if (productId == null) return null;
-    const stock = this.loadStock();
-    return stock[productId] ?? null;
+    const map = this.loadStock();
+    return map[productId] ?? null;
   }
 
   applyToProduct(product: Product): Product {
@@ -35,27 +33,48 @@ export class StockService {
 
   setStock(productId: number | null, newStock: number): void {
     if (productId == null) return;
-    const stock = this.loadStock();
-    stock[productId] = newStock;
-    this.saveStock(stock);
+    const map = this.loadStock();
+    map[productId] = newStock;
+    this.saveStock(map);
   }
 
-
   increaseStock(product: Product | number | null, amount: number): void {
-    const id = typeof product === 'number' ? product : product?.id ?? null;
+    if (amount <= 0) return;
+
+    const id =
+      typeof product === 'number'
+        ? product
+        : product && typeof product !== 'number'
+        ? product.id
+        : null;
     if (id == null) return;
+
     const map = this.loadStock();
-    const curr = map[id] ?? (product && typeof product !== 'number' ? product.quantidadeEstoque : 0);
-    map[id] = curr + amount;
+    const base =
+      map[id] ??
+      (typeof product === 'object' && product !== null ? product.quantidadeEstoque : 0);
+
+    map[id] = base + amount;
     this.saveStock(map);
   }
 
   decreaseStock(product: Product | number | null, amount: number): void {
-    const id = typeof product === 'number' ? product : product?.id ?? null;
-    if (id == null || amount <= 0) return;
+    if (amount <= 0) return;
+
+    const id =
+      typeof product === 'number'
+        ? product
+        : product && typeof product !== 'number'
+        ? product.id
+        : null;
+    if (id == null) return;
+
     const map = this.loadStock();
-    const curr = map[id] ?? (product && typeof product !== 'number' ? product.quantidadeEstoque : 0);
-    map[id] = Math.max(0, curr - amount);
+    const base =
+      map[id] ??
+      (typeof product === 'object' && product !== null ? product.quantidadeEstoque : 0);
+
+    map[id] = Math.max(0, base - amount);
     this.saveStock(map);
   }
 }

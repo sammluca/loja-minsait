@@ -4,6 +4,8 @@ import { ReactiveFormsModule, NonNullableFormBuilder, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../../models/product.model';
 import { ProductService } from '../../services/product.service';
+import { StockService } from '../../services/stock.service';
+
 @Component({
   selector: 'app-product-form',
   standalone: true,
@@ -17,30 +19,28 @@ export class ProductFormPage implements OnInit {
   editing = signal(false);
   productId: number | null = null;
 
-
   form: any;
 
   constructor(
     private fb: NonNullableFormBuilder,
     private productService: ProductService,
+    private stockService: StockService,
     private route: ActivatedRoute,
     private router: Router
   ) {
 
-    
     this.form = this.fb.group({
       id: this.fb.control<number | null>(null),
       codigoBarras: this.fb.control<string | null>(null),
       nome: this.fb.control<string>('', Validators.required),
       preco: this.fb.control<number>(0, [
-      Validators.required,
-      Validators.min(0)
+        Validators.required,
+        Validators.min(0)
       ]),
-
       quantidadeEstoque: this.fb.control<number>(0, [
-       Validators.required,
-       Validators.min(0)
-       ]),
+        Validators.required,
+        Validators.min(0)
+      ]),
       categoria: this.fb.group({
         id: this.fb.control<number | null>(null)
       })
@@ -61,7 +61,9 @@ export class ProductFormPage implements OnInit {
     this.loading.set(true);
 
     this.productService.getById(id).subscribe({
-      next: (prod) => {
+      next: (data) => {
+        const prod = this.stockService.applyToProduct(data);
+
         this.form.patchValue({
           id: prod.id,
           codigoBarras: prod.codigoBarras ?? null,
@@ -83,37 +85,36 @@ export class ProductFormPage implements OnInit {
   }
 
   save() {
-  if (this.form.invalid) {
-    this.form.markAllAsTouched();
-    return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const data = this.form.getRawValue() as Product;
+
+    if (!this.editing()) {
+      data.id = null;
+    }
+
+    if (data.categoria?.id == null) {
+      data.categoria = null;
+    }
+
+    this.loading.set(true);
+
+    if (this.editing()) {
+      this.productService.update(data).subscribe({
+        next: () => this.finish("Produto atualizado!"),
+        error: () => this.fail("Erro ao atualizar produto")
+      });
+
+    } else {
+      this.productService.create(data).subscribe({
+        next: () => this.finish("Produto criado!"),
+        error: () => this.fail("Erro ao criar produto")
+      });
+    }
   }
-
-  const data = this.form.getRawValue() as Product;
-
-  
-  if (!this.editing()) {
-    data.id = null;
-  }
-
-  if (data.categoria?.id == null) {
-    data.categoria = null;
-  }
-
-  this.loading.set(true);
-  
-  if (this.editing()) {
-    this.productService.update(data).subscribe({
-      next: () => this.finish("Produto atualizado!"),
-      error: () => this.fail("Erro ao atualizar produto")
-    });
-
-  } else {
-    this.productService.create(data).subscribe({
-      next: () => this.finish("Produto criado!"),
-      error: () => this.fail("Erro ao criar produto")
-    });
-  }
-}
 
   private finish(msg: string) {
     this.loading.set(false);

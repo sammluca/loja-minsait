@@ -22,13 +22,14 @@ export class Cart {
 
   constructor(private cartService: CartService) {}
 
-  updateQty(item: CartItem, event: Event) {
-    const qtd = Number((event.target as HTMLInputElement).value);
+ updateQty(item: CartItem, event: Event) {
+  const qtd = Number((event.target as HTMLInputElement).value);
 
-    if (item.product.id != null) {
-      this.cartService.updateQuantity(item.product.id, qtd);
-    }
+  if (item.product.id != null) {
+    this.cartService.updateQuantity(item.product.id, qtd);
   }
+}
+
 
   removeItem(item: CartItem) {
     if (!confirm(`Deseja realmente remover '${item.product.nome}' do carrinho?`)) {
@@ -48,27 +49,25 @@ export class Cart {
     this.cartService.clear();
   }
 
- 
- finishOrder() {
-  if (this.items().length === 0) {
-    alert("Carrinho vazio!");
-    return;
+  finishOrder() {
+    if (this.items().length === 0) {
+      alert("Carrinho vazio!");
+      return;
+    }
+
+    this.cartService.clear();
+
+    const box = document.createElement('div');
+    box.className = 'success-popup';
+    box.innerText = "Pedido criado com sucesso!";
+
+    document.body.appendChild(box);
+
+    setTimeout(() => box.classList.add('show'), 10);
+
+    setTimeout(() => {
+      box.classList.remove('show');
+      setTimeout(() => box.remove(), 300);
+    }, 2500);
   }
-
-  // limpa sem confirm()
-  this.cartService.clear();
-
-  const box = document.createElement('div');
-  box.className = 'success-popup';
-  box.innerText = "Pedido criado com sucesso!";
-
-  document.body.appendChild(box);
-
-  setTimeout(() => box.classList.add('show'), 10);
-
-  setTimeout(() => {
-    box.classList.remove('show');
-    setTimeout(() => box.remove(), 300);
-  }, 2500);
-}
 }

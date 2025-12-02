@@ -4,7 +4,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Product } from '../../models/product.model';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
-
+import { StockService } from '../../services/stock.service';
 
 @Component({
   selector: 'app-product-details',
@@ -21,6 +21,7 @@ export class ProductDetailsPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
+    private stockService: StockService,
     private cartService: CartService
   ) {}
 
@@ -30,7 +31,7 @@ export class ProductDetailsPage implements OnInit {
 
     this.productService.getById(id).subscribe({
       next: (data) => {
-        this.product.set(data);
+        this.product.set(this.stockService.applyToProduct(data));
         this.loading.set(false);
       },
       error: () => {
@@ -40,29 +41,31 @@ export class ProductDetailsPage implements OnInit {
   }
 
   addToCart() {
-    if (this.product()) {
-      this.cartService.addToCart(this.product()!);
-      alert("Produto adicionado ao carrinho!");
-    }
+    const prod = this.product();
+    if (!prod || !prod.id) return;
+
+    this.cartService.addToCart(prod);
+    alert("Produto adicionado ao carrinho!");
+
+    this.product.set(this.stockService.applyToProduct(prod));
   }
 
   deleteProduct() {
-  const prod = this.product();
-  if (!prod || !prod.id) return;
+    const prod = this.product();
+    if (!prod || !prod.id) return;
 
-  if (!confirm("Tem certeza que deseja excluir este produto?")) {
-    return;
-  }
-
-  this.productService.delete(prod.id).subscribe({
-    next: () => {
-      alert("Produto excluído com sucesso!");
-      window.location.href = '/products'; 
-    },
-    error: () => {
-      alert("Erro ao excluir produto");
+    if (!confirm("Tem certeza que deseja excluir este produto?")) {
+      return;
     }
-  });
-}
 
+    this.productService.delete(prod.id).subscribe({
+      next: () => {
+        alert("Produto excluído com sucesso!");
+        window.location.href = '/products';
+      },
+      error: () => {
+        alert("Erro ao excluir produto");
+      }
+    });
+  }
 }

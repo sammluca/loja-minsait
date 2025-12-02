@@ -1,11 +1,10 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-
 import { Product } from '../../models/product.model';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
-
+import { StockService } from '../../services/stock.service';
 import { ProductTableComponent } from '../../components/product-table/product-table';
 
 @Component({
@@ -27,6 +26,7 @@ export class ProductsPage implements OnInit {
   constructor(
     private productService: ProductService,
     private cartService: CartService,
+    private stockService: StockService,
     private router: Router
   ) {}
 
@@ -39,7 +39,8 @@ export class ProductsPage implements OnInit {
 
     this.productService.list().subscribe({
       next: (data) => {
-        this.products.set(data);
+        const applied = data.map(p => this.stockService.applyToProduct(p));
+        this.products.set(applied);
         this.loading.set(false);
       },
       error: () => {
@@ -67,9 +68,9 @@ export class ProductsPage implements OnInit {
     });
   }
 
-  
   addToCart(product: Product) {
     this.cartService.addToCart(product);
     alert("Produto adicionado ao carrinho!");
+    this.loadProducts();
   }
 }

@@ -23,12 +23,11 @@ export class CartService {
   }
 
   addToCart(product: Product): void {
-    if (!product?.id) return;
+    if (!product || product.id == null) return;
 
     const p = this.stock.applyToProduct(product);
-    const available = p.quantidadeEstoque;
 
-    if (available <= 0) {
+    if (p.quantidadeEstoque <= 0) {
       this.notify.error('Produto sem estoque disponível!');
       return;
     }
@@ -37,11 +36,10 @@ export class CartService {
     const existing = current.find(i => i.product.id === product.id);
 
     if (existing) {
-      if (existing.quantity >= available) {
+      if (p.quantidadeEstoque <= 0) {
         this.notify.error('Quantidade máxima disponível alcançada.');
         return;
       }
-
       this.items.set(current.map(i =>
         i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i
       ));
@@ -49,7 +47,8 @@ export class CartService {
       this.items.set([...current, { product: p, quantity: 1 }]);
     }
 
-    this.stock.decreaseStock(product, 1);
+    this.stock.decreaseStock(p, 1);
+
     this.persist();
   }
 
@@ -58,6 +57,7 @@ export class CartService {
 
     const current = this.items();
     const item = current.find(i => i.product.id === productId);
+
     if (item) {
       this.stock.increaseStock(item.product, item.quantity);
     }
@@ -73,8 +73,9 @@ export class CartService {
     const item = current.find(i => i.product.id === productId);
     if (!item) return;
 
-    const available = this.stock.getStock(productId) ?? item.product.quantidadeEstoque;
-    const maxAllowed = available + item.quantity;
+    const stockNow = this.stock.getStock(productId);
+    const baseStock = stockNow ?? item.product.quantidadeEstoque;
+    const maxAllowed = baseStock + item.quantity;
 
     if (quantity > maxAllowed) {
       this.notify.error(`Estoque máximo disponível: ${maxAllowed}`);
@@ -82,12 +83,20 @@ export class CartService {
     }
 
     const diff = quantity - item.quantity;
-    if (diff > 0) this.stock.decreaseStock(item.product, diff);
-    else if (diff < 0) this.stock.increaseStock(item.product, -diff);
 
-    this.items.set(current.map(i =>
-      i.product.id === productId ? { ...i, quantity } : i
-    ));
+    if (diff > 0) {
+      this.stock.decreaseStock(item.product, diff);
+    } else if (diff < 0) {
+      this.stock.increaseStock(item.product, -diff);
+    }
+
+    const updatedProduct = this.stock.applyToProduct(item.product);
+
+    this.items.set(
+      current.map(i =>
+        i.product.id === productId ? { ...i, quantity, product: updatedProduct } : i
+      )
+    );
 
     this.persist();
   }
