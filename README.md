@@ -62,16 +62,20 @@ O sistema permite **cadastro de produtos**, controle automático de **estoque**,
 npm install
 npm start
 
-A aplicação ficará disponível em: http://localhost:4200
+// A aplicação ficará disponível em: http://localhost:4200
+
+```
 
 ---
 
 ## Testes
 
-### Para rodar testes unitários(Karma/Jasmine):
+###  **Para rodar testes unitários(Karma/Jasmine):**
 
+
+```bash
 npm test
 
-
+```
 
 
